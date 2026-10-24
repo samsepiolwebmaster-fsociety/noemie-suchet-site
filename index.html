@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noémie Suchet — Portfolio d'architecture</title>
+<meta name="description" content="Portfolio de Noémie Suchet, architecte diplômée d'État.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Instrument+Serif:ital@1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0b09;--ink:#f2efe8;--muted:#9a948a;--acc:#b8743f;--line:rgba(242,239,232,.14)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{height:100dvh}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Mono',ui-monospace,monospace;overflow:hidden;display:flex;flex-direction:column}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.07;z-index:5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.halo{position:fixed;width:70vmax;height:70vmax;left:15%;top:10%;border-radius:50%;background:radial-gradient(circle,rgba(184,116,63,.22),transparent 60%);filter:blur(40px);z-index:0;animation:drift 28s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(-18%,12%)}}
+@media (prefers-reduced-motion:reduce){.halo{animation:none}}
+header{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line)}
+h1{margin:0;font-family:'Archivo',sans-serif;font-stretch:70%;font-weight:850;font-size:clamp(20px,3vw,30px);letter-spacing:-.01em;text-transform:uppercase;line-height:1}
+h1 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;text-transform:none;color:var(--acc);font-stretch:100%;letter-spacing:0}
+.lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.stage{position:relative;z-index:2;flex:1;display:flex;overflow:hidden;padding:20px 24px 90px;min-height:0}
+#bookWrap{margin:auto;will-change:transform}
+.stage{touch-action:pan-x pan-y}
+.stage.zoomed{cursor:grab;overflow:auto;scrollbar-width:thin;scrollbar-color:rgba(242,239,232,.25) transparent}
+#book{margin:0 auto;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.page{background:#fff;overflow:hidden;position:relative}
+.page::after{content:"";position:absolute;top:0;bottom:0;width:7%;pointer-events:none}
+.page.L::after{right:0;background:linear-gradient(to left,rgba(0,0,0,.22),rgba(0,0,0,.06) 30%,transparent)}
+.page.R::after{left:0;background:linear-gradient(to right,rgba(0,0,0,.22),rgba(0,0,0,.06) 30%,transparent)}
+.page img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;pointer-events:none}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.bar{position:fixed;z-index:6;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(13,11,9,.82);backdrop-filter:blur(10px)}
+.bar button{background:none;border:0;color:var(--ink);font:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.bar button:hover{background:rgba(242,239,232,.08)}
+.bar button:disabled{opacity:.3;cursor:default;background:none}
+#snd.off{opacity:.35;text-decoration:line-through}
+.bar .fs{background:var(--acc);color:#0d0b09;font-weight:500}
+.bar .fs:hover{background:var(--acc);filter:brightness(1.1)}
+.bar .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+.audience{position:fixed;z-index:5;right:16px;bottom:4px;font-size:9px;opacity:.5;margin:0}
+body.fakefs .audience{display:none}
+#zv{min-width:44px;text-align:center;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+#count{min-width:112px;text-align:center;font-size:12px;letter-spacing:.08em}
+:fullscreen header{display:none}
+:fullscreen .stage{padding:16px 16px 80px}
+@media (max-width:640px){header{padding:14px 16px;flex-direction:column;gap:6px}.stage{padding:12px 16px 84px}
+  .bar{left:16px;right:16px;transform:none;justify-content:space-between;gap:0;bottom:16px}
+  .bar button{padding:9px 10px}#count{min-width:0;font-size:10px;letter-spacing:.04em}#zv,.bar .sep{display:none}
+  .fs .lg{display:none}}
+@media (min-width:641px){.fs .sm{display:none}}
+/* téléphone couché, ou plein écran « maison » sur iPhone (Safari refuse le vrai plein écran) : tout pour le livret */
+@media (orientation:landscape) and (max-height:500px){header{display:none}
+  .stage{padding:8px 12px 58px}
+  .bar{bottom:8px;padding:3px}.bar button{padding:7px 11px}#zv,.bar .sep{display:none}#count{min-width:0;font-size:10px}
+  .fs .lg{display:none}.fs .sm{display:inline}}
+body.fakefs header{display:none}
+body.fakefs .stage{padding:8px 12px 58px}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="halo" aria-hidden="true"></div>
+
+<header>
+  <h1>Noémie Suchet <em>portfolio d'architecture</em></h1>
+  <div class="lab">Architecte diplômée d'État · La Réunion</div>
+</header>
+
+<main class="stage" id="stage">
+  <div class="loading lab" id="loading">Chargement des pages…</div>
+  <div id="bookWrap"></div>
+</main>
+
+<nav class="bar" aria-label="Navigation">
+  <button id="prev" aria-label="Page précédente">←</button>
+  <span id="count" class="lab">—</span>
+  <button id="next" aria-label="Page suivante">→</button>
+  <span class="sep"></span>
+  <button id="zout" aria-label="Zoom arrière">−</button>
+  <span id="zv">100 %</span>
+  <button id="zin" aria-label="Zoom avant">+</button>
+  <button id="snd" aria-label="Couper le son" title="Son des pages">♪</button>
+  <span class="sep"></span>
+  <button id="fs" class="fs" aria-label="Plein écran"><span class="lg">Plein écran</span><span class="sm">⛶</span></button>
+</nav>
+
+<p class="audience lab">Mesure d'audience anonyme, sans cookie</p>
+
+<!-- Mesure d'audience GoatCounter : sans cookie, sans donnée personnelle, aucun bandeau de consentement requis -->
+<script data-goatcounter="https://noemiesuchet.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+// statistiques : chaque planche vue, zoomée, le plein écran — une fois par visite
+const deja = new Set();
+function stat(path, title) {
+  if (deja.has(path)) return; deja.add(path);
+  let essais = 0;
+  (function envoie() {
+    if (window.goatcounter && goatcounter.count) goatcounter.count({path, title, event: true});
+    else if (++essais < 20) setTimeout(envoie, 500);           // script pas encore chargé (ou bloqué : on abandonne)
+  })();
+}
+const planche = i => i === 0 ? 1 : Math.floor((i - 1) / 2) + 2;
+// Version finale (V3, 24/10) : couverture seule, 19 planches coupées en deux au pli, 4e de couverture seule : 40 pages, une planche = une double page
+const N = 40, W = 4961, H = 3508, PLANCHES = 21;
+const VERSION = 3;                                            // à augmenter à chaque nouvelle version : force les téléphones à recharger les pages
+const pages = Array.from({length: N}, (_, i) => `pages/${String(i + 1).padStart(2, '0')}.jpg?v=${VERSION}`);
+const ZOOMS = [1, 1.25, 1.5, 2, 2.5, 3];
+const stage = document.getElementById('stage');
+let flip, zf = 1;                                             // zoom continu, de 1 à 3
+const ZMIN = 1, ZMAX = 3;
+
+function build() {
+  const cs = getComputedStyle(stage);
+  const cw = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const ch = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  const portrait = cw < ch || cw < 480;                       // écran debout : une demi-planche ; couché : la double page
+  const cols = portrait ? 1 : 2;
+  let h = ch, w = h * W / H;
+  if (w * cols > cw) { w = cw / cols; h = w * H / W; }
+  w *= zf; h *= zf;
+  const at = flip ? flip.getCurrentPageIndex() : 0;
+  if (flip) flip.destroy();
+  // conteneur neuf à chaque construction (destroy() retire l'ancien du DOM)
+  const wrap = document.getElementById('bookWrap');
+  wrap.innerHTML = '';
+  const el = document.createElement('div'); el.id = 'book';
+  pages.forEach((src, i) => {
+    const d = document.createElement('div'); d.className = 'page ' + (i % 2 ? 'R' : 'L'); // ombre du pli
+    const im = document.createElement('img'); im.src = src; im.alt = ''; im.draggable = false;
+    d.appendChild(im); el.appendChild(d);
+  });
+  wrap.appendChild(el);
+  flip = new St.PageFlip(el, {
+    width: Math.floor(w), height: Math.floor(h), size: 'fixed',
+    showCover: true, usePortrait: portrait, maxShadowOpacity: .5,
+    mobileScrollSupport: false, flippingTime: 900, startPage: at,
+    useMouseEvents: zf === 1                                  // zoomé : la souris sert à se déplacer, pas à tourner
+  });
+  flip.loadFromHTML(el.querySelectorAll('.page')); // vraies <img> : nettes sur écran Retina
+  flip.on('flip', e => count(e.data)); flip.on('changeState', e => { if (e.data === 'read') count(); if (e.data === 'flipping') kraft(); }); flip.on('init', () => count()); count();
+  stage.classList.toggle('zoomed', zf > 1);
+  document.getElementById('zv').textContent = Math.round(zf * 100) + ' %';
+  document.getElementById('zout').disabled = zf <= ZMIN;
+  document.getElementById('zin').disabled = zf >= ZMAX;
+}
+function count(at) {                                          // at : page d'arrivée annoncée par l'événement « flip »
+  if (!flip) return;
+  const i = typeof at === 'number' ? at : flip.getCurrentPageIndex();
+  stat(`planche-${planche(i)}`, `Planche ${planche(i)} vue`);
+  document.getElementById('count').textContent = flip.getOrientation() === 'landscape'
+    ? `Planche ${planche(i)} / ${PLANCHES}`
+    : `Page ${i + 1} / ${N}`;
+}
+// boutons et touches : palier suivant / précédent
+function zoom(d) {
+  const next = d > 0 ? ZOOMS.find(v => v > zf + .01) : [...ZOOMS].reverse().find(v => v < zf - .01);
+  if (next) setZoom(next);
+}
+// applique un zoom en gardant sous les yeux le point visé (par défaut le centre de la vue)
+function setZoom(v, cx = stage.clientWidth / 2, cy = stage.clientHeight / 2) {
+  v = Math.max(ZMIN, Math.min(ZMAX, Math.round(v * 100) / 100));
+  if (v < 1.04) v = 1;                                          // aimanté sur 100 %
+  if (v === zf) return;
+  const fx = (stage.scrollLeft + cx) / stage.scrollWidth;
+  const fy = (stage.scrollTop + cy) / stage.scrollHeight;
+  zf = v; build();
+  if (v > 1 && flip) { const n = planche(flip.getCurrentPageIndex()); stat(`zoom-planche-${n}`, `Planche ${n} zoomée`); }
+  requestAnimationFrame(() => {
+    stage.scrollLeft = fx * stage.scrollWidth - cx;
+    stage.scrollTop = fy * stage.scrollHeight - cy;
+  });
+}
+
+// --- pincement : aperçu fluide en CSS, puis reconstruction nette à la fin du geste ---
+const wrapEl = document.getElementById('bookWrap');
+let pinch = null, pinchEnd;
+function pinchStart(cx, cy) {
+  if (!pinch) {
+    const r = stage.getBoundingClientRect();
+    pinch = {k: 1, cx: cx - r.left, cy: cy - r.top};
+    const b = wrapEl.getBoundingClientRect();
+    wrapEl.style.transformOrigin = `${cx - b.left}px ${cy - b.top}px`;
+  }
+}
+function pinchMove(k) {
+  pinch.k = Math.max(ZMIN / zf, Math.min(ZMAX / zf, k));
+  wrapEl.style.transform = `scale(${pinch.k})`;
+}
+function pinchCommit() {
+  if (!pinch) return;
+  const p = pinch; pinch = null;
+  wrapEl.style.transform = ''; wrapEl.style.transformOrigin = '';
+  setZoom(zf * p.k, p.cx, p.cy);
+}
+// pincement trackpad Mac = wheel avec ctrlKey
+// roulette de la souris : zoom / dézoom aussi (glisser pour se déplacer une fois zoomé)
+stage.addEventListener('wheel', e => {
+  e.preventDefault();
+  const dy = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;     // Firefox compte en lignes
+  pinchStart(e.clientX, e.clientY);
+  pinchMove(pinch.k * Math.exp(-Math.max(-60, Math.min(60, dy)) / (e.ctrlKey ? 100 : 400)));
+  clearTimeout(pinchEnd); pinchEnd = setTimeout(pinchCommit, 180);
+}, {passive: false});
+// écran tactile : deux doigts
+let touch0 = null;
+const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+stage.addEventListener('touchstart', e => {
+  if (e.touches.length !== 2) return;
+  e.preventDefault(); e.stopPropagation();                      // pas de tour de page pendant un pincement
+  touch0 = dist(e.touches);
+  pinchStart((e.touches[0].clientX + e.touches[1].clientX) / 2, (e.touches[0].clientY + e.touches[1].clientY) / 2);
+}, {passive: false, capture: true});
+stage.addEventListener('touchmove', e => {
+  if (!touch0 || e.touches.length !== 2) return;
+  e.preventDefault(); e.stopPropagation();
+  pinchMove(dist(e.touches) / touch0);
+}, {passive: false, capture: true});
+stage.addEventListener('touchend', e => {
+  if (touch0 && e.touches.length < 2) { touch0 = null; pinchCommit(); }
+}, {capture: true});
+// Safari : empêche le zoom de toute la page
+['gesturestart', 'gesturechange'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
+
+// glisser pour se déplacer quand on est zoomé
+let drag = null;
+stage.addEventListener('pointerdown', e => { if (zf > 1 && e.button === 0 && !touch0) drag = {x: e.clientX, y: e.clientY, l: stage.scrollLeft, t: stage.scrollTop}; });
+addEventListener('pointermove', e => { if (drag && !touch0) { stage.scrollLeft = drag.l - (e.clientX - drag.x); stage.scrollTop = drag.t - (e.clientY - drag.y); } });
+addEventListener('pointerup', () => drag = null);
+
+// --- bruit de papier kraft, synthétisé (aucun fichier son à charger) ---
+let actx, kraftBuf, mute = false, lastSnd = 0;
+try { mute = localStorage.getItem('kraft-mute') === '1'; } catch (e) {}
+function kraftBuffer(c) {
+  const sr = c.sampleRate, n = Math.floor(sr * .75), buf = c.createBuffer(1, n, sr), d = buf.getChannelData(0);
+  let lp = 0, crack = 0;
+  for (let i = 0; i < n; i++) {
+    const t = i / sr;
+    // souffle de la feuille : montée rapide, glissement, retombée
+    const env = t < .07 ? t / .07 : Math.exp(-(t - .07) * 5.2);
+    if (Math.random() < .0016 * env) crack = 1;               // grains secs du kraft
+    crack *= .93;
+    const w = Math.random() * 2 - 1;
+    lp += (w - lp) * .35;                                       // grain plus mat que le bruit blanc
+    // la feuille qui se pose, petit appui sourd à la fin
+    const settle = t > .5 ? Math.exp(-(t - .5) * 28) * (Math.random() * 2 - 1) * .5 : 0;
+    d[i] = (lp * .55 * env) + (w * crack * .6) + settle;
+  }
+  return buf;
+}
+function kraft() {
+  if (mute) return;
+  const now = performance.now(); if (now - lastSnd < 250) return; lastSnd = now;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    kraftBuf = kraftBuf || kraftBuffer(actx);
+    const src = actx.createBufferSource(); src.buffer = kraftBuf;
+    src.playbackRate.value = .9 + Math.random() * .2;           // jamais deux fois le même froissement
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 350;
+    const bp = actx.createBiquadFilter(); bp.type = 'peaking'; bp.frequency.value = 2400; bp.gain.value = 5; bp.Q.value = .9;
+    const g = actx.createGain(); g.gain.value = .55;
+    src.connect(hp).connect(bp).connect(g).connect(actx.destination); src.start();
+  } catch (e) {}
+}
+const sndBtn = document.getElementById('snd');
+function sndUI() { sndBtn.classList.toggle('off', mute); sndBtn.setAttribute('aria-label', mute ? 'Activer le son' : 'Couper le son'); }
+sndBtn.onclick = () => { mute = !mute; try { localStorage.setItem('kraft-mute', mute ? '1' : '0'); } catch (e) {} sndUI(); if (!mute) kraft(); };
+sndUI();
+
+// précharge puis construit
+Promise.all(pages.map(src => new Promise(r => { const im = new Image(); im.onload = im.onerror = r; im.src = src; })))
+  .then(() => { document.getElementById('loading').remove(); build(); });
+
+document.getElementById('prev').onclick = () => flip && flip.flipPrev();
+document.getElementById('next').onclick = () => flip && flip.flipNext();
+document.getElementById('zin').onclick = () => zoom(1);
+document.getElementById('zout').onclick = () => zoom(-1);
+document.addEventListener('keydown', e => {
+  if (!flip) return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); flip.flipNext(); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); flip.flipPrev(); }
+  if (e.key === '+' || e.key === '=') { e.preventDefault(); zoom(1); }
+  if (e.key === '-' || e.key === '_') { e.preventDefault(); zoom(-1); }
+  if (e.key === '0') setZoom(1);
+  if (e.key === 'f') toggleFs();
+  if (e.key === 'm') sndBtn.click();
+});
+const de = document.documentElement, realFs = !!(de.requestFullscreen || de.webkitRequestFullscreen) && document.fullscreenEnabled !== false;
+function toggleFs() {
+  stat('plein-ecran', 'Plein écran ouvert');
+  if (!realFs) {                                              // iPhone : plein écran « maison », on cache tout sauf le livret
+    const on = document.body.classList.toggle('fakefs');
+    document.querySelector('#fs .lg').textContent = on ? 'Quitter' : 'Plein écran';
+    document.querySelector('#fs .sm').textContent = on ? '✕' : '⛶';
+    if (on) scrollTo(0, 1);
+    return setTimeout(() => flip && build(), 60);
+  }
+  if (document.fullscreenElement) document.exitFullscreen();
+  else (de.requestFullscreen || de.webkitRequestFullscreen).call(de);
+}
+document.getElementById('fs').onclick = toggleFs;
+document.addEventListener('fullscreenchange', () => {
+  document.querySelector('#fs .lg').textContent = document.fullscreenElement ? 'Quitter' : 'Plein écran';
+});
+let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => flip && !pinch && build(), 200); });
+</script>
+</body>
+</html>
